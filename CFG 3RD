@@ -1,0 +1,38 @@
+#include <stdio.h>
+#include <stdbool.h>
+#include <string.h>
+
+int main() {
+    char input[100];
+    
+    printf("Enter a string: ");
+    scanf("%s", input);
+
+    int pos = 0;
+    int length = strlen(input);
+    bool belongsToLanguage = false;
+    
+    // Checking if the string satisfies the CFG
+    if (input[0] == '0' && input[length - 1] == '1') {
+        pos++; // Move past '0'
+        while (pos < length) {
+            if (input[pos] == '0') {
+                pos++; // Move past '0'
+            } else if (input[pos] == '1') {
+                pos++; // Move past '1'
+            } else {
+                belongsToLanguage = false;
+                break;
+            }
+        }
+        if (pos == length) // Reached the end of the string
+            belongsToLanguage = true;
+    }
+
+    if (belongsToLanguage)
+        printf("String belongs to the language defined by the CFG.\n");
+    else
+        printf("String does not belong to the language defined by the CFG.\n");
+
+    return 0;
+}

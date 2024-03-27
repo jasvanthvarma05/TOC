@@ -1,0 +1,53 @@
+#include <stdio.h>
+#include <stdbool.h>
+#include <string.h>
+
+int main() {
+    char input[100];
+    
+    printf("Enter a string: ");
+    scanf("%s", input);
+
+    int length = strlen(input);
+
+    // Base case: Empty string is accepted
+    if (length == 0) {
+        printf("String belongs to the language defined by the CFG.\n");
+        return 0;
+    }
+
+    // Checking for the string's validity based on CFG rules
+    bool isASymbol = false;
+    bool isAEmpty = false;
+
+    // Checking for S → 0S0
+    if (input[0] == '0' && input[length - 1] == '0') {
+        isASymbol = true;
+        for (int i = 1; i < length - 1; i++) {
+            if (input[i] != '0') {
+                isASymbol = false;
+                break;
+            }
+        }
+    }
+
+    // Checking for A → 1A | ε
+    if (input[0] == '1') {
+        isAEmpty = true;
+        for (int i = 1; i < length; i++) {
+            if (input[i] != '1') {
+                isAEmpty = false;
+                break;
+            }
+        }
+    }
+
+    // Determining if the string belongs to the CFG language
+    if (isASymbol || isAEmpty) {
+        printf("String belongs to the language defined by the CFG.\n");
+    } else {
+        printf("String does not belong to the language defined by the CFG.\n");
+    }
+
+    return 0;
+}

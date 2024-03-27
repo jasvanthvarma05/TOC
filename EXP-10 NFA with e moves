@@ -1,0 +1,73 @@
+#include <stdio.h>
+#include <stdbool.h>
+
+#define MAX_STATES 100
+#define MAX_TRANSITIONS 100
+
+int n; // Number of states
+int m; // Number of transitions
+int epsilon_transitions[MAX_STATES][MAX_TRANSITIONS]; // Epsilon transitions
+int epsilon_closure[MAX_STATES][MAX_STATES]; // Epsilon closure for each state
+
+void calculate_epsilon_closure(int state) {
+    bool visited[MAX_STATES] = {false};
+    int queue[MAX_STATES];
+    int front = 0, rear = 0;
+    
+    // Initialize the queue with the current state
+    queue[rear++] = state;
+    visited[state] = true;
+
+    while (front < rear) {
+        int current_state = queue[front++];
+        epsilon_closure[state][current_state] = 1; // Mark as reachable
+
+        // Iterate over epsilon transitions from the current state
+        for (int i = 0; i < m; i++) {
+            int next_state = epsilon_transitions[current_state][i];
+            if (!visited[next_state]) {
+                queue[rear++] = next_state;
+                visited[next_state] = true;
+            }
+        }
+    }
+}
+
+int main() {
+    // Input NFA with epsilon transitions
+    printf("Enter the number of states: ");
+    scanf("%d", &n);
+    printf("Enter the number of transitions: ");
+    scanf("%d", &m);
+    printf("Enter epsilon transitions (enter -1 to stop):\n");
+
+    for (int i = 0; i < n; i++) {
+        printf("For state %d: ", i);
+        int transition;
+        int j = 0;
+        while (true) {
+            scanf("%d", &transition);
+            if (transition == -1) break;
+            epsilon_transitions[i][j++] = transition;
+        }
+    }
+
+    // Calculate epsilon closure for each state
+    for (int i = 0; i < n; i++) {
+        calculate_epsilon_closure(i);
+    }
+
+    // Display epsilon closure for each state
+    printf("\nEpsilon Closure:\n");
+    for (int i = 0; i < n; i++) {
+        printf("Epsilon closure for state %d: ", i);
+        for (int j = 0; j < n; j++) {
+            if (epsilon_closure[i][j] == 1) {
+                printf("%d ", j);
+            }
+        }
+        printf("\n");
+    }
+
+    return 0;
+}
